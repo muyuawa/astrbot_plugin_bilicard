@@ -1,0 +1,9 @@
+name: astrbot_plugin_bilicard
+display_name: B站视频解析
+desc: B 站视频信息卡、可选 AI 音频总结与原生视频下载发送；支持时长限制、缓存清理和扫码登录。
+version: 1.0.0
+author: muyuawa
+repo: https://github.com/muyuawa/astrbot_plugin_bilicard
+astrbot_version: ">=4.29.1,<5"
+support_platforms:
+  - aiocqhttp

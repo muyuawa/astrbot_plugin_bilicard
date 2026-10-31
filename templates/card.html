@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title }} · 哔哩哔哩视频解析</title>
+<style>
+:root {
+  --primary:#6750A4; --secondary:#EADDFF; --background:#F8F7FC;
+  --surface:#FFFFFF; --accent:#FB7299; --text:#1B1B26; --muted:#79788D;
+  --soft:#F3EFFC; --line:#EDE9F5;
+}
+* { box-sizing:border-box; }
+html { background:var(--background); }
+body { width:900px; margin:0; padding:20px; color:var(--text);
+  font-family:"Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;
+  -webkit-font-smoothing:antialiased; background:radial-gradient(ellipse at 10% 0%,#EDE7FF 0,transparent 55%),var(--background); }
+.card { padding:14px 16px 16px; border-radius:32px; background:rgba(255,255,255,.88);
+  box-shadow:0 8px 40px #6750A40C; overflow:hidden; }
+.icon { width:28px; height:28px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.header { display:flex; align-items:center; gap:16px; padding:2px 14px 18px; }
+.brand { width:52px; height:52px; display:grid; place-items:center; border-radius:50%;
+  color:white; background:linear-gradient(135deg,#7955D9,#6745C0); }
+.brand .icon { width:29px; height:29px; fill:currentColor; stroke:none; }
+.brand-title { font-size:29px; font-weight:900; letter-spacing:-1px; }
+.badge { color:var(--primary); background:var(--secondary); font-size:19px; font-weight:700; border-radius:30px; padding:7px 18px; white-space:nowrap; }
+.cover { position:relative; width:100%; aspect-ratio:16/9; border-radius:26px; overflow:hidden;
+  background:linear-gradient(135deg,#EADDFF,#EEEAF6); }
+.cover>img { width:100%; height:100%; display:block; object-fit:cover; }
+.cover::after { content:""; position:absolute; inset:55% 0 0; background:linear-gradient(transparent,#1B1B2636); pointer-events:none; }
+.cover-empty { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--primary); font-size:23px; gap:14px; }
+.cover-empty .icon { width:72px; height:72px; opacity:.45; }
+.quality,.duration { position:absolute; bottom:18px; z-index:1; padding:9px 22px; border-radius:99px; color:white; font-size:23px; line-height:1.3; font-weight:700; }
+.quality { left:18px; background:linear-gradient(110deg,#FB7299,#D660C3 55%,#7954CF); }
+.duration { right:18px; background:#22232DA8; font-variant-numeric:tabular-nums; }
+.intro { padding:18px 18px 14px; }
+h1 { font-size:31px; line-height:1.45; font-weight:800; margin:0 0 8px; overflow-wrap:anywhere;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.published { color:var(--muted); font-size:20px; line-height:1.5; margin:0; }
+.stats { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; padding:0 10px; }
+.stat { display:flex; align-items:center; gap:18px; border-radius:23px; background:var(--soft); padding:10px 18px; min-height:82px; }
+.stat-icon { width:61px; height:61px; border-radius:20px; display:grid; place-items:center; flex-shrink:0; }
+.stat-icon .icon { width:33px; height:33px; }
+.purple { color:#8256D6; background:#EAE1FC; } .blue { color:#4E82F8; background:#E0EAFF; }
+.pink { color:#F35F98; background:#FCE1EF; } .orange { color:#FF934F; background:#FFE8DB; }
+.amber { color:#F5AE2B; background:#FFF1D4; } .green { color:#34BB78; background:#DEF4E7; }
+.stat-name { color:#737087; font-size:18px; line-height:1.4; }
+.stat-value { font-size:27px; font-weight:750; line-height:1.25; font-variant-numeric:tabular-nums; }
+.up { display:flex; align-items:center; gap:22px; margin:18px 4px 16px; padding:11px 24px;
+  border-radius:24px; background:linear-gradient(100deg,#F1EBFD,#F6F1FD); }
+.avatar { width:68px; height:68px; object-fit:cover; border-radius:50%; flex-shrink:0; background:#EEE6FB; }
+.avatar-empty { display:grid; place-items:center; color:var(--primary); font-size:26px; font-weight:700; }
+.up-name { font-weight:750; font-size:25px; overflow-wrap:anywhere; flex:1; min-width:0; }
+.up-prefix { margin-right:12px; }
+.description { margin:0 4px 18px; padding:19px 25px 23px; border-radius:24px; background:var(--surface); box-shadow:0 3px 16px #6750A409; }
+.section-title { display:flex; align-items:center; gap:13px; font-size:25px; font-weight:750; margin:0 0 10px; }
+.section-title>.icon { color:#524580; }
+.original-link { font-size:18px; color:var(--primary); margin:0 0 7px; line-height:1.5; overflow-wrap:anywhere; }
+.desc-text { margin:0; color:#706C82; font-size:20px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere;
+  display:-webkit-box; -webkit-line-clamp:7; -webkit-box-orient:vertical; overflow:hidden; }
+.comments-title { margin:0 18px 13px; }
+.summary { margin:0 4px 18px; padding:19px 25px 21px; border-radius:24px; background:linear-gradient(110deg,#F2ECFD,#FCF7FC); border:1px solid #EAE1F5; }
+.summary .section-title { color:var(--primary); }
+.summary .badge { font-size:15px; padding:4px 12px; margin-left:auto; }
+.summary-text { margin:0; font-size:20px; line-height:1.7; color:#49405D; white-space:pre-wrap; overflow-wrap:anywhere; }
+.summary-note { margin:10px 0 0; font-size:15px; line-height:1.5; color:#706780; }
+.comments-title .badge { font-size:18px; margin-left:3px; padding:6px 17px; }
+.comments { margin:0 4px; padding:0 22px; border-radius:24px; background:var(--surface); }
+.comment { display:flex; align-items:flex-start; gap:18px; padding:18px 0; }
+.comment+.comment { border-top:1px solid var(--line); }
+.comment .avatar { width:66px; height:66px; }
+.comment-main { flex:1; min-width:0; }
+.comment-heading { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:5px; }
+.username { color:#494073; font-size:21px; font-weight:700; overflow-wrap:anywhere; }
+.level { display:inline-flex; padding:2px 10px; border-radius:99px; color:#207BC5; background:#E5F0FF; font-size:15px; line-height:1.5; }
+.comment-text { font-size:20px; line-height:1.6; margin:0 0 4px; white-space:pre-wrap; overflow-wrap:anywhere;
+  display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+.comment-time { font-size:16px; color:var(--muted); line-height:1.5; }
+.likes { display:flex; align-items:center; justify-content:flex-end; gap:8px; font-size:18px; color:var(--muted); align-self:center; min-width:54px; }
+.likes .icon { width:25px; height:25px; }
+.empty { padding:30px 8px; margin:0; color:var(--muted); font-size:19px; line-height:1.6; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="play" viewBox="0 0 24 24"><path d="M8 4.5c0-1 1.1-1.6 1.9-1l11 7c.9.6.9 1.8 0 2.4l-11 7c-.8.6-1.9 0-1.9-1Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M4 3.5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H9l-5 4v-4H3a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1Z"/><path d="M7 10h.01M12 10h.01M17 10h.01" stroke-width="3"/></symbol>
+<symbol id="like" viewBox="0 0 24 24"><path d="M7 21H3V10h4m0 11h11a2 2 0 0 0 2-1.6l2-8A2 2 0 0 0 20 9h-6l1-5a2 2 0 0 0-3-2L7 10v11Z"/></symbol>
+<symbol id="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><path d="M6.5 7.5c3-2 8-2 11 0M8.5 17V10H12m3.5 7V10H12m0-2v11" stroke="white" stroke-width="1.8"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 7 .9-5.1 5 1.3 7-6.3-3.3-6.3 3.3 1.3-7-5.1-5 7-.9Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="share" viewBox="0 0 24 24"><path d="m14 2 9 9-9 9v-6C7 14 3 17 1 22c0-9 4-15 13-15Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="file" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H5V3a1 1 0 0 1 1-1ZM14 2v6h6M9 12h7M9 16h7"/></symbol>
+<symbol id="sparkles" viewBox="0 0 24 24"><path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4ZM20 2v4M18 4h4"/></symbol>
+</defs>
+</svg>
+{% macro icon(name) %}<svg class="icon" aria-hidden="true"><use href="#{{ name }}"/></svg>{% endmacro %}
+{% macro avatar(src, name) %}{% if src %}<img class="avatar" src="{{ src }}" alt="{{ name }}的头像">{% else %}<span class="avatar avatar-empty" aria-hidden="true">{{ name[:1] }}</span>{% endif %}{% endmacro %}
+<main class="card">
+  <header class="header"><span class="brand">{{ icon('play') }}</span><span class="brand-title">哔哩哔哩</span><span class="badge">视频解析</span></header>
+  <section class="cover" aria-label="视频封面">
+    {% if cover %}<img src="{{ cover }}" alt="视频封面">{% else %}<div class="cover-empty">{{ icon('play') }}<span>封面暂不可用</span></div>{% endif %}
+    <span class="quality">{{ quality }}</span><span class="duration">{{ duration }}</span>
+  </section>
+  <section class="intro"><h1>{{ title }}</h1><p class="published">{{ published }} 发布</p></section>
+  <section class="stats" aria-label="视频数据">{% for stat in stats %}
+    <div class="stat"><span class="stat-icon {{ stat.color }}">{{ icon(stat.icon) }}</span><div><div class="stat-name">{{ stat.label }}</div><div class="stat-value">{{ stat.value }}</div></div></div>
+  {% endfor %}</section>
+  <section class="up">{{ avatar(owner.avatar, owner.name) }}<div class="up-name"><span class="up-prefix">UP主</span>{{ owner.name }}</div></section>
+  <section class="description"><h2 class="section-title">{{ icon('file') }}视频简介</h2><p class="original-link">{{ url }}</p><p class="desc-text">{{ description }}</p></section>
+  {% if summary or summary_notice %}
+  <section class="summary" aria-label="AI 音频总结"><h2 class="section-title">{{ icon('sparkles') }}AI 音频总结<span class="badge">音频提炼</span></h2><p class="summary-text">{{ summary or summary_notice }}</p>{% if summary %}<p class="summary-note">根据第一 P 的音频转写生成 · AI 内容仅供参考</p>{% endif %}</section>
+  {% endif %}
+  {% if show_comments %}
+  <h2 class="section-title comments-title">{{ icon('chat') }}热门评论<span class="badge">精选</span></h2>
+  <section class="comments" aria-label="热门评论列表">
+    {% for comment in comments %}<article class="comment">{{ avatar(comment.avatar, comment.name) }}<div class="comment-main"><div class="comment-heading"><span class="username">{{ comment.name }}</span><span class="level">Lv.{{ comment.level }}</span></div><p class="comment-text">{{ comment.content }}</p><div class="comment-time">{{ comment.time }}</div></div><div class="likes">{{ icon('like') }}<span>{{ comment.likes }}</span></div></article>
+    {% else %}<p class="empty">{{ comment_notice }}</p>{% endfor %}
+  </section>
+  {% endif %}
+</main>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "auto_detect": {
+    "description": "自动识别 B 站视频",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后直接发送链接、BV 号、QQ B 站小程序/分享卡片或含视频的合并转发即可解析；关闭时使用 @机器人 解析 地址，或同条消息附带卡片。每次解析第一个视频。"
+  },
+  "comments_count": {
+    "description": "热门评论数量",
+    "type": "int",
+    "default": 3,
+    "hint": "支持 0–5 条，0 表示隐藏热门评论模块。"
+  },
+  "cooldown_seconds": {
+    "description": "相同视频自动解析冷却时间（秒）",
+    "type": "int",
+    "default": 60,
+    "hint": "同一会话重复分享相同视频时生效；手动解析不受此限制。可设 0–600。"
+  },
+  "request_timeout": {
+    "description": "单次网络请求超时（秒）",
+    "type": "int",
+    "default": 12,
+    "hint": "支持 5–30 秒。"
+  },
+  "audio_summary": {
+    "description": "在卡片中显示 AI 音频总结",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后提取第一 P 音轨，经语音识别和 AI 总结后显示在视频简介下方。需要 FFmpeg、STT 和聊天模型。沿用下载时长上限；显式下载指令不生成卡片或总结。音频和转写会交给所选服务处理，可能产生服务费用。"
+  },
+  "summary_stt_provider_id": {
+    "description": "音频总结使用的语音识别服务",
+    "type": "string",
+    "default": "",
+    "_special": "select_provider_stt",
+    "hint": "选择 AstrBot 中已配置的 STT 提供商；留空使用当前会话的语音识别服务。服务需支持本地 WAV 文件和目标音频时长。"
+  },
+  "summary_llm_provider_id": {
+    "description": "音频总结使用的 AI 模型",
+    "type": "string",
+    "default": "",
+    "_special": "select_provider",
+    "hint": "选择 AstrBot 中已配置的聊天模型；留空使用当前会话模型。只传音频转写，不带聊天记录、人格或工具。"
+  },
+  "summary_timeout": {
+    "description": "音频总结总超时（秒）",
+    "type": "int",
+    "default": 180,
+    "hint": "30–1800 秒，包含音频下载、提取、语音识别和 AI 总结。失败或超时仍发送原卡片并显示说明；插件临时媒体自动清理。"
+  },
+  "send_video": {
+    "description": "解析后自动发送视频",
+    "type": "bool",
+    "default": false,
+    "hint": "开启后普通解析会附带原生视频消息。关闭时仍可使用 /bili 下载 地址。超过时长限制时只返回直链。"
+  },
+  "video_send_mode": {
+    "description": "视频发送方式",
+    "type": "string",
+    "default": "auto",
+    "options": ["auto", "base64", "local", "callback"],
+    "hint": "auto：有文件回调则使用回调，否则先使用本地文件；QQ OneBot 明确返回 EACCES/ENOENT 等文件不可读错误时，自动切换 Base64 重试一次。base64：跨容器直接传视频内容（最大 64 MiB）。local：强制本地文件，不自动切换，适合同主机/同容器或共享相同路径。callback：强制 HTTP 文件回调，需要配置 callback_api_base。"
+  },
+  "video_quality": {
+    "description": "下载视频清晰度",
+    "type": "string",
+    "default": "720P",
+    "options": ["360P", "480P", "720P", "1080P", "1080P60", "4K"],
+    "hint": "选择目标画质；源视频或账号权限不支持时使用不高于目标的可用画质，并提示实际结果。"
+  },
+  "max_video_duration": {
+    "description": "下载视频时长上限（秒）",
+    "type": "int",
+    "default": 300,
+    "hint": "请求发送视频时，超限不下载、只给临时直链；音频总结也遵守此上限。支持 0–86400，0 表示不限时长；多分 P 视频按第一 P 计算。"
+  },
+  "max_video_size_mb": {
+    "description": "下载视频大小上限（MiB）",
+    "type": "int",
+    "default": 100,
+    "hint": "支持 1–500。下载或合成超过上限时停止处理并清理本地文件，返回直链。平台自身上传限制仍然生效。"
+  },
+  "video_timeout": {
+    "description": "视频下载及合成总超时（秒）",
+    "type": "int",
+    "default": 300,
+    "hint": "支持 30–1800。超时后清理本次临时文件。"
+  },
+  "ffmpeg_path": {
+    "description": "FFmpeg 可执行文件路径（可选）",
+    "type": "string",
+    "default": "",
+    "hint": "留空从系统 PATH 查找 ffmpeg；音频总结、DASH 合并、FLV 转 MP4 及非 H.264 转码时需要。程序应位于运行 AstrBot 的环境内。"
+  },
+  "browser_path": {
+    "description": "浏览器可执行文件路径（可选）",
+    "type": "string",
+    "default": "",
+    "hint": "留空优先使用 Playwright Chromium，其次尝试本机 Chrome/Edge。指定路径应位于运行 AstrBot 的主机或容器内。"
+  }
+}

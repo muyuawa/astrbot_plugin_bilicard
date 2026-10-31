@@ -1,0 +1,15 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+*.enc
+*.key
+login-*.png
+preview-output/
+*.env
+.env*
+*.mp4
+*.wav
+*.m4s
+*.flv
+*.bin
